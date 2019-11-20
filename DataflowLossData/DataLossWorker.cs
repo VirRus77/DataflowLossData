@@ -24,7 +24,7 @@ namespace DataflowLossData
                 v => v,
             };
 
-            var buffer = new BufferBlock<int>(new DataflowBlockOptions { BoundedCapacity = 10 });
+            var buffer = new BufferBlock<int>(new DataflowBlockOptions { BoundedCapacity = 10, });
 
             var transformBlocks = instances.Select(
                     func => new TransformBlock<int, int>(
@@ -33,6 +33,8 @@ namespace DataflowLossData
                         {
                             BoundedCapacity = MessagePerInstance,
                             MaxDegreeOfParallelism = MessagePerInstance,
+                            // Added. Fix problem: https://github.com/dotnet/corefx/issues/42627#issuecomment-556097587
+                            EnsureOrdered = false,
                         }
                     )
                 )
